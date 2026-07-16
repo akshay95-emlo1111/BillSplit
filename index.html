@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Split — Bill Splitter (AED)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --bg: #EFEBE1;
+    --paper: #FBF9F4;
+    --ink: #23241F;
+    --ink-soft: #6B6A61;
+    --gold: #A9791F;
+    --gold-deep: #7C5A16;
+    --teal: #1F5F5B;
+    --teal-deep: #163F3C;
+    --danger: #A44A3F;
+    --line: #DAD4C3;
+    --line-strong: #C6BEA7;
+    --radius: 3px;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+    padding:36px 24px 80px;
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:24px;
+    margin-bottom:34px;
+    border-bottom: 1px solid var(--line-strong);
+    padding-bottom:18px;
+    flex-wrap:wrap;
+  }
+  .brand-eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--gold-deep);
+    margin:0 0 6px;
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(30px,4vw,44px);
+    margin:0;
+    letter-spacing:-0.01em;
+    line-height:1;
+  }
+  h1 em{
+    font-style:italic;
+    color:var(--teal);
+  }
+  .header-meta{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+    text-align:right;
+    line-height:1.6;
+  }
+
+  /* ---------- Layout ---------- */
+  .layout{
+    display:grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap:28px;
+    align-items:start;
+  }
+  @media (max-width: 880px){
+    .layout{ grid-template-columns: 1fr; }
+  }
+
+  .panel{
+    background: var(--paper);
+    border:1px solid var(--line);
+    border-radius: var(--radius);
+    padding:24px;
+    margin-bottom:22px;
+  }
+  .panel-title{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin:0 0 4px;
+  }
+  .panel-num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--gold-deep);
+    border:1px solid var(--gold-deep);
+    border-radius:50%;
+    width:20px;height:20px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+  .panel-title h2{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:20px;
+    margin:0;
+  }
+  .panel-sub{
+    font-size:13px;
+    color:var(--ink-soft);
+    margin:2px 0 18px 30px;
+  }
+
+  /* ---------- People ---------- */
+  .people-input-row{
+    display:flex;
+    gap:10px;
+    margin-bottom:16px;
+  }
+  input[type=text], input[type=number]{
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:14px;
+    padding:10px 12px;
+    border:1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background:#fff;
+    color:var(--ink);
+    width:100%;
+  }
+  input[type=text]:focus, input[type=number]:focus{
+    outline:2px solid var(--teal);
+    outline-offset:1px;
+    border-color:var(--teal);
+  }
+  .btn{
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:0.01em;
+    padding:10px 18px;
+    border-radius: var(--radius);
+    border:1px solid var(--teal-deep);
+    background:var(--teal);
+    color:#fff;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:transform .08s ease, background .15s ease;
+  }
+  .btn:hover{ background:var(--teal-deep); }
+  .btn:active{ transform:translateY(1px); }
+  .btn:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+  .btn.ghost{
+    background:transparent;
+    color:var(--teal-deep);
+    border:1px solid var(--line-strong);
+  }
+  .btn.ghost:hover{ background:#fff; border-color:var(--teal); }
+  .btn.small{ padding:6px 12px; font-size:12px; }
+  .btn.danger{ background:transparent; color:var(--danger); border:1px solid var(--danger); }
+  .btn.danger:hover{ background:var(--danger); color:#fff; }
+  .btn.confirming{
+    background:var(--danger);
+    color:#fff;
+    border-color:var(--danger);
+  }
+
+  .people-chips{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .chip{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:#fff;
+    border:1px solid var(--line-strong);
+    border-radius:20px;
+    padding:6px 6px 6px 14px;
+    font-size:13px;
+    font-weight:500;
+  }
+  .chip .dot{
+    width:8px;height:8px;border-radius:50%;
+    flex-shrink:0;
+  }
+  .chip button{
+    border:none;
+    background:var(--line);
+    color:var(--ink-soft);
+    width:20px;height:20px;
+    border-radius:50%;
+    cursor:pointer;
+    font-size:13px;
+    line-height:1;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .chip button:hover{ background:var(--danger); color:#fff; }
+  .empty-note{
+    font-size:13px;
+    color:var(--ink-soft);
+    font-style:italic;
+    padding:8px 0;
+  }
+
+  /* ---------- Items ---------- */
+  .item-form{
+    display:grid;
+    grid-template-columns: 1fr 130px auto;
+    gap:10px;
+    margin-bottom:20px;
+  }
+  @media (max-width:520px){
+    .item-form{ grid-template-columns: 1fr; }
+  }
+  .item-card{
+    border:1px solid var(--line);
+    border-radius: var(--radius);
+    padding:14px 16px;
+    margin-bottom:12px;
+    background:#fff;
+  }
+  .item-card.unassigned{
+    border-color: var(--danger);
+    background: #FBF1EF;
+  }
+  .item-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    margin-bottom:10px;
+  }
+  .item-name{
+    font-weight:600;
+    font-size:15px;
+  }
+  .item-price{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:500;
+    color:var(--gold-deep);
+    font-size:14px;
+    white-space:nowrap;
+  }
+  .item-people{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-bottom:8px;
+  }
+  .toggle-person{
+    font-size:12px;
+    padding:5px 10px;
+    border-radius:16px;
+    border:1px solid var(--line-strong);
+    background:#fff;
+    color:var(--ink-soft);
+    cursor:pointer;
+    transition: all .1s ease;
+  }
+  .toggle-person.on{
+    background:var(--teal);
+    border-color:var(--teal-deep);
+    color:#fff;
+  }
+  .item-foot{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:12px;
+    color:var(--ink-soft);
+  }
+  .item-warn{
+    color:var(--danger);
+    font-weight:600;
+  }
+  .split-all-row{
+    display:flex;
+    gap:8px;
+    margin-bottom:8px;
+  }
+  .link-btn{
+    background:none;
+    border:none;
+    color:var(--teal-deep);
+    font-size:12px;
+    text-decoration:underline;
+    cursor:pointer;
+    padding:0;
+  }
+
+  /* ---------- Tax / Service ---------- */
+  .toggle-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .toggle-row:last-child{ border-bottom:none; }
+  .toggle-label{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+  }
+  .toggle-label strong{ font-size:14px; }
+  .toggle-label span{ font-size:12px; color:var(--ink-soft); }
+  .switch-and-input{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .pct-input{
+    width:72px;
+    text-align:right;
+    font-family:'IBM Plex Mono', monospace;
+  }
+  .switch{
+    position:relative;
+    width:42px;height:24px;
+    flex-shrink:0;
+  }
+  .switch input{ opacity:0; width:0; height:0; position:absolute; }
+  .slider{
+    position:absolute; inset:0;
+    background:var(--line-strong);
+    border-radius:20px;
+    cursor:pointer;
+    transition:.15s;
+  }
+  .slider::before{
+    content:'';
+    position:absolute;
+    width:18px;height:18px;
+    left:3px; top:3px;
+    background:#fff;
+    border-radius:50%;
+    transition:.15s;
+    box-shadow:0 1px 2px rgba(0,0,0,.3);
+  }
+  .switch input:checked + .slider{ background:var(--teal); }
+  .switch input:checked + .slider::before{ transform:translateX(18px); }
+
+  /* ---------- Receipt (signature element) ---------- */
+  .receipt-sticky{
+    position:sticky;
+    top:24px;
+  }
+  .receipt{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding:26px 26px 20px;
+    font-family:'IBM Plex Mono', monospace;
+    box-shadow: 0 18px 34px -20px rgba(35,36,31,0.35);
+  }
+  .receipt-zigzag{
+    height:16px;
+    background:
+      linear-gradient(-45deg, var(--bg) 8px, transparent 0),
+      linear-gradient(45deg, var(--bg) 8px, transparent 0);
+    background-size:16px 16px;
+    background-position: left bottom;
+    background-repeat: repeat-x;
+    margin-bottom:24px;
+  }
+  .receipt-head{
+    text-align:center;
+    margin-bottom:6px;
+  }
+  .receipt-head .r-title{
+    font-family:'Fraunces', serif;
+    font-size:20px;
+    font-weight:600;
+    letter-spacing:0.02em;
+  }
+  .receipt-head .r-sub{
+    font-size:11px;
+    color:var(--ink-soft);
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    margin-top:2px;
+  }
+  .receipt-divider{
+    border:none;
+    border-top:1px dashed var(--line-strong);
+    margin:16px 0;
+  }
+  .receipt-person{
+    margin-bottom:14px;
+  }
+  .rp-name-row{
+    display:flex;
+    justify-content:space-between;
+    font-size:13.5px;
+    font-weight:600;
+    margin-bottom:5px;
+  }
+  .rp-line{
+    display:flex;
+    justify-content:space-between;
+    font-size:12px;
+    color:var(--ink-soft);
+    padding:1px 0;
+  }
+  .rp-line .rp-item-name{
+    max-width:65%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .rp-total-row{
+    display:flex;
+    justify-content:space-between;
+    font-size:13px;
+    font-weight:600;
+    margin-top:6px;
+    padding-top:6px;
+    border-top:1px solid var(--line);
+    color:var(--teal-deep);
+  }
+  .summary-row{
+    display:flex;
+    justify-content:space-between;
+    font-size:13px;
+    margin-bottom:6px;
+  }
+  .summary-row.muted{ color:var(--ink-soft); }
+  .grand-total{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-top:14px;
+    padding-top:14px;
+    border-top:2px solid var(--ink);
+  }
+  .grand-total .gt-label{
+    font-family:'Fraunces', serif;
+    font-size:15px;
+    font-weight:600;
+  }
+  .grand-total .gt-value{
+    font-size:22px;
+    font-weight:600;
+    color:var(--gold-deep);
+  }
+  .receipt-empty{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:12.5px;
+    padding:20px 0;
+    line-height:1.7;
+  }
+  .receipt-actions{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+  }
+  .receipt-actions .btn{ flex:1; text-align:center; font-family:'IBM Plex Sans', sans-serif;}
+  .aed{ font-size:11px; opacity:.7; margin-right:2px;}
+  .manual-copy-box{
+    width:100%;
+    margin-top:12px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    line-height:1.5;
+    padding:12px;
+    border:1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background:#fff;
+    color:var(--ink);
+    resize:vertical;
+  }
+
+  /* ---------- Saved bills ---------- */
+  .saved-bill-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:10px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .saved-bill-row:last-child{ border-bottom:none; }
+  .sb-info{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    min-width:0;
+  }
+  .sb-info strong{
+    font-size:13.5px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .sb-info span{
+    font-size:11.5px;
+    color:var(--ink-soft);
+    font-family:'IBM Plex Mono', monospace;
+  }
+  .sb-actions{
+    display:flex;
+    gap:6px;
+    flex-shrink:0;
+  }
+  .save-bill-row{
+    display:flex;
+    gap:10px;
+    margin-bottom:16px;
+  }
+  .save-bill-form{
+    display:flex;
+    gap:8px;
+    margin-bottom:16px;
+  }
+  .save-bill-form input{ flex:1; }
+  .save-status{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    display:flex;
+    align-items:center;
+    gap:6px;
+    min-height:16px;
+    margin-bottom:2px;
+  }
+  .save-status .dot-live{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--teal);
+    flex-shrink:0;
+  }
+
+  footer.note{
+    text-align:center;
+    font-size:12px;
+    color:var(--ink-soft);
+    margin-top:30px;
+  }
+
+  ::selection{ background: var(--gold); color:#fff; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <p class="brand-eyebrow">AED · Split evenly, or not at all</p>
+      <h1>Who owes <em>what</em></h1>
+    </div>
+    <div class="header-meta">
+      Currency: United Arab Emirates Dirham<br>
+      Splits by item, not by headcount
+    </div>
+  </header>
+
+  <div class="layout">
+    <div class="left-col">
+
+      <!-- PEOPLE -->
+      <section class="panel">
+        <div class="panel-title"><span class="panel-num">1</span><h2>People on this bill</h2></div>
+        <p class="panel-sub">Add everyone who might owe something. You can remove anyone later.</p>
+
+        <div class="people-input-row">
+          <input type="text" id="personInput" placeholder="e.g. Akshay" maxlength="30">
+          <button class="btn" id="addPersonBtn">Add person</button>
+        </div>
+
+        <div class="people-chips" id="peopleChips"></div>
+        <p class="empty-note" id="peopleEmptyNote">No one added yet — add at least two people to start splitting.</p>
+      </section>
+
+      <!-- ITEMS -->
+      <section class="panel">
+        <div class="panel-title"><span class="panel-num">2</span><h2>Items on the bill</h2></div>
+        <p class="panel-sub">Enter each line item, then choose who shared it. Everyone's selected by default — untick anyone who didn't have it.</p>
+
+        <div class="item-form">
+          <input type="text" id="itemNameInput" placeholder="e.g. Grilled Hammour">
+          <input type="number" id="itemPriceInput" placeholder="0.00 AED" min="0" step="0.01">
+          <button class="btn" id="addItemBtn">Add item</button>
+        </div>
+        <p class="empty-note" id="itemFormHint" style="display:none;"></p>
+
+        <div id="itemsList"></div>
+        <p class="empty-note" id="itemsEmptyNote">No items yet — add the first line from the bill above.</p>
+      </section>
+
+      <!-- TAX & SERVICE -->
+      <section class="panel">
+        <div class="panel-title"><span class="panel-num">3</span><h2>Tax &amp; service charge</h2></div>
+        <p class="panel-sub">Applied proportionally — everyone pays tax in proportion to what they actually ordered.</p>
+
+        <div class="toggle-row">
+          <div class="toggle-label">
+            <strong>VAT</strong>
+            <span>UAE standard rate is 5%</span>
+          </div>
+          <div class="switch-and-input">
+            <input type="number" class="pct-input" id="taxPct" value="5" min="0" step="0.1">
+            <label class="switch">
+              <input type="checkbox" id="taxToggle" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="toggle-row">
+          <div class="toggle-label">
+            <strong>Service charge</strong>
+            <span>Common on dine-in bills, often 5–10%</span>
+          </div>
+          <div class="switch-and-input">
+            <input type="number" class="pct-input" id="servicePct" value="10" min="0" step="0.1">
+            <label class="switch">
+              <input type="checkbox" id="serviceToggle">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="toggle-row">
+          <div class="toggle-label">
+            <strong>Tip</strong>
+            <span>Optional — split evenly across everyone, unlike items</span>
+          </div>
+          <div class="switch-and-input">
+            <input type="number" class="pct-input" id="tipPct" value="0" min="0" step="0.1">
+            <label class="switch">
+              <input type="checkbox" id="tipToggle">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- SAVED BILLS -->
+      <section class="panel">
+        <div class="panel-title"><span class="panel-num">4</span><h2>Saved bills</h2></div>
+        <p class="panel-sub">Your current bill autosaves as you go. Give it a name to keep it around for later.</p>
+
+        <div class="save-status" id="saveStatus"></div>
+
+        <div class="save-bill-row" id="saveBillRow">
+          <button class="btn" id="saveBillBtn">Save this bill as…</button>
+        </div>
+        <div class="save-bill-form" id="saveBillForm" style="display:none;">
+          <input type="text" id="saveBillNameInput" placeholder="e.g. Zuma dinner — 12 Jul" maxlength="60">
+          <button class="btn small" id="saveBillConfirmBtn">Save</button>
+          <button class="btn ghost small" id="saveBillCancelBtn">Cancel</button>
+        </div>
+        <p class="empty-note" id="saveBillHint" style="display:none;"></p>
+
+        <div id="savedBillsList"></div>
+        <p class="empty-note" id="savedBillsEmpty">No saved bills yet.</p>
+      </section>
+
+    </div>
+
+    <!-- RECEIPT -->
+    <div class="receipt-sticky">
+      <div class="receipt" id="receipt">
+        <div class="receipt-head">
+          <div class="r-title">The Split</div>
+          <div class="r-sub" id="receiptDate"></div>
+        </div>
+        <hr class="receipt-divider">
+        <div id="receiptBody">
+          <p class="receipt-empty">Add people and items on the left —<br>the breakdown will build itself here.</p>
+        </div>
+      </div>
+      <div class="receipt-zigzag"></div>
+      <div class="receipt-actions">
+        <button class="btn ghost" id="copyBtn">Copy summary</button>
+        <button class="btn danger" id="resetBtn">Reset all</button>
+      </div>
+      <textarea id="manualCopyBox" class="manual-copy-box" readonly rows="7" style="display:none;"></textarea>
+      <p class="empty-note" id="copyHint" style="display:none;"></p>
+    </div>
+  </div>
+
+  <footer class="note">All amounts in AED · Tax and service are split by each person's share of the subtotal, not evenly</footer>
+</div>
+
+<script>
+(function(){
+  const CHIP_COLORS = ['#A9791F','#1F5F5B','#A44A3F','#5B5EA6','#7A8B4F','#B15A8C','#3E7A8C','#8C5E3E'];
+
+  let people = [];      // {id, name, colorIdx}
+  let items = [];       // {id, name, price, participants:[personId,...]}
+  let nextPersonId = 1;
+  let nextItemId = 1;
+
+  const $ = (id) => document.getElementById(id);
+
+  const fmt = (n) => 'AED ' + (Math.round(n*100)/100).toLocaleString('en-AE', {minimumFractionDigits:2, maximumFractionDigits:2});
+
+  // ---------- STORAGE (backend) ----------
+  // Uses the artifact's built-in persistent key-value storage.
+  // All keys below are personal (shared=false) — only visible to you, across sessions.
+  const KEY_DRAFT = 'draft:current';
+  const KEY_INDEX = 'bills:index';
+  const billKey = (id) => 'bills:record:' + id;
+
+  let saveStatusTimer = null;
+  function flashStatus(msg, isError){
+    const el = $('saveStatus');
+    if(!el) return;
+    el.innerHTML = isError
+      ? `<span>${escapeHtml(msg)}</span>`
+      : `<span class="dot-live"></span><span>${escapeHtml(msg)}</span>`;
+    clearTimeout(saveStatusTimer);
+    saveStatusTimer = setTimeout(() => { el.innerHTML = ''; }, 2200);
+  }
+
+  // Native confirm()/alert()/prompt() are unreliable inside the sandboxed
+  // artifact iframe (they can silently no-op), so destructive actions use
+  // this "click again to confirm" pattern on the button itself instead.
+  function armConfirm(btn, confirmLabel, action){
+    if(btn.dataset.armed === '1'){
+      btn.dataset.armed = '0';
+      clearTimeout(btn._armTimer);
+      btn.textContent = btn.dataset.originalLabel;
+      btn.classList.remove('confirming');
+      action();
+    } else {
+      btn.dataset.originalLabel = btn.dataset.originalLabel || btn.textContent;
+      btn.dataset.armed = '1';
+      btn.classList.add('confirming');
+      btn.textContent = confirmLabel;
+      btn._armTimer = setTimeout(() => {
+        btn.dataset.armed = '0';
+        btn.classList.remove('confirming');
+        btn.textContent = btn.dataset.originalLabel;
+      }, 3500);
+    }
+  }
+
+  function getSettings(){
+    return {
+      taxOn: $('taxToggle').checked, taxPct: $('taxPct').value,
+      serviceOn: $('serviceToggle').checked, servicePct: $('servicePct').value,
+      tipOn: $('tipToggle').checked, tipPct: $('tipPct').value
+    };
+  }
+
+  function applySettings(s){
+    if(!s) return;
+    $('taxToggle').checked = !!s.taxOn;
+    $('taxPct').value = s.taxPct != null ? s.taxPct : 5;
+    $('serviceToggle').checked = !!s.serviceOn;
+    $('servicePct').value = s.servicePct != null ? s.servicePct : 10;
+    $('tipToggle').checked = !!s.tipOn;
+    $('tipPct').value = s.tipPct != null ? s.tipPct : 0;
+  }
+
+  // Autosave the working bill so refreshing the page never loses progress.
+  async function saveDraft(){
+    try{
+      const state = { people, items, nextPersonId, nextItemId, settings: getSettings() };
+      const result = await window.storage.set(KEY_DRAFT, JSON.stringify(state), false);
+      if(result) flashStatus('Saved automatically');
+    }catch(e){
+      console.error('Autosave failed:', e);
+      flashStatus('Autosave failed — check connection', true);
+    }
+  }
+
+  async function loadDraft(){
+    try{
+      const res = await window.storage.get(KEY_DRAFT, false);
+      if(res && res.value){
+        const state = JSON.parse(res.value);
+        people = state.people || [];
+        items = state.items || [];
+        nextPersonId = state.nextPersonId || (people.length ? Math.max(...people.map(p => p.id)) + 1 : 1);
+        nextItemId = state.nextItemId || (items.length ? Math.max(...items.map(i => i.id)) + 1 : 1);
+        applySettings(state.settings);
+      }
+    }catch(e){
+      // No draft saved yet — that's fine, start fresh.
+    }
+  }
+
+  async function readIndex(){
+    try{
+      const res = await window.storage.get(KEY_INDEX, false);
+      return res && res.value ? JSON.parse(res.value) : [];
+    }catch(e){
+      return [];
+    }
+  }
+
+  async function writeIndex(idx){
+    try{
+      await window.storage.set(KEY_INDEX, JSON.stringify(idx), false);
+    }catch(e){
+      console.error('Could not update saved-bills index:', e);
+    }
+  }
+
+  function showSaveBillForm(){
+    $('saveBillRow').style.display = 'none';
+    $('saveBillForm').style.display = 'flex';
+    $('saveBillHint').style.display = 'none';
+    const input = $('saveBillNameInput');
+    input.value = '';
+    input.focus();
+  }
+
+  function hideSaveBillForm(){
+    $('saveBillForm').style.display = 'none';
+    $('saveBillRow').style.display = 'flex';
+    $('saveBillHint').style.display = 'none';
+  }
+
+  function showSaveBillHint(msg){
+    const hint = $('saveBillHint');
+    hint.textContent = msg;
+    hint.style.display = 'block';
+  }
+
+  async function saveNamedBill(){
+    const nameInput = $('saveBillNameInput');
+    const name = nameInput.value.trim();
+    if(!name){
+      showSaveBillHint('Give this bill a name first.');
+      nameInput.focus();
+      return;
+    }
+    if(people.length === 0 && items.length === 0){
+      showSaveBillHint('Add at least one person or item before saving.');
+      return;
+    }
+    const id = 'b' + Date.now();
+    const record = { id, name, savedAt: new Date().toISOString(), people, items, settings: getSettings() };
+    try{
+      const result = await window.storage.set(billKey(id), JSON.stringify(record), false);
+      if(!result) throw new Error('Storage set returned null');
+      const idx = await readIndex();
+      idx.unshift({ id, name: record.name, savedAt: record.savedAt });
+      await writeIndex(idx);
+      renderSavedBills(idx);
+      hideSaveBillForm();
+      flashStatus('Bill saved');
+    }catch(e){
+      console.error('Save bill failed:', e);
+      showSaveBillHint('Could not save this bill — please try again.');
+    }
+  }
+
+  async function loadNamedBill(id){
+    try{
+      const res = await window.storage.get(billKey(id), false);
+      if(!res || !res.value){ flashStatus('Could not find that saved bill', true); return; }
+      const record = JSON.parse(res.value);
+      people = record.people || [];
+      items = record.items || [];
+      nextPersonId = people.length ? Math.max(...people.map(p => p.id)) + 1 : 1;
+      nextItemId = items.length ? Math.max(...items.map(i => i.id)) + 1 : 1;
+      applySettings(record.settings);
+      renderPeople();
+      renderItems();
+      renderReceipt();
+      saveDraft();
+      flashStatus('Loaded "' + record.name + '"');
+    }catch(e){
+      console.error('Load bill failed:', e);
+      flashStatus('Could not load that bill', true);
+    }
+  }
+
+  async function deleteNamedBill(id){
+    try{
+      await window.storage.delete(billKey(id), false);
+      const idx = (await readIndex()).filter(b => b.id !== id);
+      await writeIndex(idx);
+      renderSavedBills(idx);
+      flashStatus('Bill deleted');
+    }catch(e){
+      console.error('Delete bill failed:', e);
+      flashStatus('Could not delete that bill', true);
+    }
+  }
+
+  function renderSavedBills(idx){
+    const wrap = $('savedBillsList');
+    wrap.innerHTML = '';
+    if(!idx || idx.length === 0){
+      $('savedBillsEmpty').style.display = 'block';
+      return;
+    }
+    $('savedBillsEmpty').style.display = 'none';
+    idx.forEach(b => {
+      const row = document.createElement('div');
+      row.className = 'saved-bill-row';
+      const date = new Date(b.savedAt).toLocaleDateString('en-AE', { day:'2-digit', month:'short', year:'numeric' });
+      const info = document.createElement('div');
+      info.className = 'sb-info';
+      info.innerHTML = `<strong>${escapeHtml(b.name)}</strong><span>${date}</span>`;
+      const actions = document.createElement('div');
+      actions.className = 'sb-actions';
+      const loadBtn = document.createElement('button');
+      loadBtn.className = 'btn ghost small';
+      loadBtn.textContent = 'Load';
+      loadBtn.onclick = () => loadNamedBill(b.id);
+      const delBtn = document.createElement('button');
+      delBtn.className = 'btn danger small';
+      delBtn.textContent = 'Delete';
+      delBtn.onclick = () => armConfirm(delBtn, 'Confirm delete?', () => deleteNamedBill(b.id));
+      actions.appendChild(loadBtn);
+      actions.appendChild(delBtn);
+      row.appendChild(info);
+      row.appendChild(actions);
+      wrap.appendChild(row);
+    });
+  }
+
+  async function renderSavedBillsFromStorage(){
+    const idx = await readIndex();
+    renderSavedBills(idx);
+  }
+
+  // ---------- PEOPLE ----------
+  function addPerson(){
+    const input = $('personInput');
+    const name = input.value.trim();
+    if(!name) return;
+    people.push({ id: nextPersonId++, name, colorIdx: people.length % CHIP_COLORS.length });
+    input.value = '';
+    input.focus();
+    renderPeople();
+    renderItems();
+    renderReceipt();
+    saveDraft();
+  }
+
+  function removePerson(id){
+    people = people.filter(p => p.id !== id);
+    items.forEach(it => { it.participants = it.participants.filter(pid => pid !== id); });
+    renderPeople();
+    renderItems();
+    renderReceipt();
+    saveDraft();
+  }
+
+  function renderPeople(){
+    const wrap = $('peopleChips');
+    wrap.innerHTML = '';
+    people.forEach(p => {
+      const chip = document.createElement('div');
+      chip.className = 'chip';
+      chip.innerHTML = `<span class="dot" style="background:${CHIP_COLORS[p.colorIdx]}"></span>${escapeHtml(p.name)}`;
+      const btn = document.createElement('button');
+      btn.textContent = '×';
+      btn.title = 'Remove ' + p.name;
+      btn.onclick = () => removePerson(p.id);
+      chip.appendChild(btn);
+      wrap.appendChild(chip);
+    });
+    $('peopleEmptyNote').style.display = people.length ? 'none' : 'block';
+  }
+
+  // ---------- ITEMS ----------
+  function showItemHint(msg, isError){
+    const hint = $('itemFormHint');
+    hint.textContent = msg;
+    hint.style.display = 'block';
+    hint.style.color = isError ? 'var(--danger)' : 'var(--ink-soft)';
+  }
+
+  function clearItemHint(){
+    const hint = $('itemFormHint');
+    hint.style.display = 'none';
+  }
+
+  function flashInvalid(el){
+    el.style.borderColor = 'var(--danger)';
+    setTimeout(() => { el.style.borderColor = ''; }, 1200);
+  }
+
+  function addItem(){
+    const nameInput = $('itemNameInput');
+    const priceInput = $('itemPriceInput');
+    const name = nameInput.value.trim();
+    // Accept comma decimals too (e.g. "12,50") since that's common shorthand.
+    const rawPrice = priceInput.value.trim().replace(',', '.');
+    const price = parseFloat(rawPrice);
+
+    if(!name){
+      showItemHint('Enter an item name first.', true);
+      flashInvalid(nameInput);
+      nameInput.focus();
+      return;
+    }
+    if(rawPrice === '' || isNaN(price)){
+      showItemHint('Enter a price for "' + name + '".', true);
+      flashInvalid(priceInput);
+      priceInput.focus();
+      return;
+    }
+    if(price < 0){
+      showItemHint('Price can\'t be negative.', true);
+      flashInvalid(priceInput);
+      priceInput.focus();
+      return;
+    }
+
+    clearItemHint();
+    items.push({
+      id: nextItemId++,
+      name,
+      price,
+      participants: people.map(p => p.id) // default: split among everyone currently added
+    });
+    nameInput.value = '';
+    priceInput.value = '';
+    nameInput.focus();
+    renderItems();
+    renderReceipt();
+    saveDraft();
+  }
+
+  function removeItem(id){
+    items = items.filter(it => it.id !== id);
+    renderItems();
+    renderReceipt();
+    saveDraft();
+  }
+
+  function toggleParticipant(itemId, personId){
+    const item = items.find(it => it.id === itemId);
+    if(!item) return;
+    if(item.participants.includes(personId)){
+      item.participants = item.participants.filter(id => id !== personId);
+    } else {
+      item.participants.push(personId);
+    }
+    renderItems();
+    renderReceipt();
+    saveDraft();
+  }
+
+  function setAllParticipants(itemId, on){
+    const item = items.find(it => it.id === itemId);
+    if(!item) return;
+    item.participants = on ? people.map(p => p.id) : [];
+    renderItems();
+    renderReceipt();
+    saveDraft();
+  }
+
+  function renderItems(){
+    const list = $('itemsList');
+    list.innerHTML = '';
+    items.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'item-card' + (item.participants.length === 0 ? ' unassigned' : '');
+
+      const top = document.createElement('div');
+      top.className = 'item-top';
+      top.innerHTML = `<span class="item-name">${escapeHtml(item.name)}</span><span class="item-price">${fmt(item.price)}</span>`;
+      card.appendChild(top);
+
+      if(people.length){
+        const splitRow = document.createElement('div');
+        splitRow.className = 'split-all-row';
+        const allBtn = document.createElement('button');
+        allBtn.className = 'link-btn';
+        allBtn.textContent = 'Everyone';
+        allBtn.onclick = () => setAllParticipants(item.id, true);
+        const noneBtn = document.createElement('button');
+        noneBtn.className = 'link-btn';
+        noneBtn.textContent = 'Clear';
+        noneBtn.onclick = () => setAllParticipants(item.id, false);
+        splitRow.appendChild(allBtn);
+        splitRow.appendChild(noneBtn);
+        card.appendChild(splitRow);
+      }
+
+      const peopleRow = document.createElement('div');
+      peopleRow.className = 'item-people';
+      people.forEach(p => {
+        const on = item.participants.includes(p.id);
+        const btn = document.createElement('button');
+        btn.className = 'toggle-person' + (on ? ' on' : '');
+        btn.textContent = p.name;
+        btn.onclick = () => toggleParticipant(item.id, p.id);
+        peopleRow.appendChild(btn);
+      });
+      card.appendChild(peopleRow);
+
+      const foot = document.createElement('div');
+      foot.className = 'item-foot';
+      const perHead = item.participants.length ? fmt(item.price / item.participants.length) + ' each' : '';
+      foot.innerHTML = `<span>${item.participants.length ? item.participants.length + ' sharing · ' + perHead : ''}</span>`;
+      const rightSpan = document.createElement('span');
+      if(item.participants.length === 0){
+        rightSpan.className = 'item-warn';
+        rightSpan.textContent = "No one assigned — won't be counted";
+      }
+      const delBtn = document.createElement('button');
+      delBtn.className = 'link-btn';
+      delBtn.style.marginLeft = '10px';
+      delBtn.style.color = 'var(--danger)';
+      delBtn.textContent = 'Remove item';
+      delBtn.onclick = () => removeItem(item.id);
+      const footRight = document.createElement('span');
+      footRight.appendChild(rightSpan);
+      footRight.appendChild(delBtn);
+      foot.appendChild(footRight);
+      card.appendChild(foot);
+
+      list.appendChild(card);
+    });
+    $('itemsEmptyNote').style.display = items.length ? 'none' : 'block';
+  }
+
+  // ---------- CALCULATION ----------
+  function calculate(){
+    const subtotals = {}; // personId -> amount
+    people.forEach(p => subtotals[p.id] = 0);
+    const personItemLines = {}; // personId -> [{name, amount}]
+    people.forEach(p => personItemLines[p.id] = []);
+
+    let billSubtotal = 0;
+
+    items.forEach(item => {
+      if(item.participants.length === 0) return;
+      const share = item.price / item.participants.length;
+      billSubtotal += item.price;
+      item.participants.forEach(pid => {
+        if(subtotals[pid] === undefined) return;
+        subtotals[pid] += share;
+        personItemLines[pid].push({ name: item.name, amount: share });
+      });
+    });
+
+    const taxOn = $('taxToggle').checked;
+    const taxPct = parseFloat($('taxPct').value) || 0;
+    const serviceOn = $('serviceToggle').checked;
+    const servicePct = parseFloat($('servicePct').value) || 0;
+    const tipOn = $('tipToggle').checked;
+    const tipPct = parseFloat($('tipPct').value) || 0;
+
+    const taxAmount = taxOn ? billSubtotal * (taxPct/100) : 0;
+    const serviceAmount = serviceOn ? billSubtotal * (servicePct/100) : 0;
+    const tipAmount = tipOn ? billSubtotal * (tipPct/100) : 0;
+
+    const activePeople = people.filter(p => subtotals[p.id] > 0 || people.length);
+    const numPeopleForTip = people.length || 1;
+
+    let grandRaw = 0;
+    const perPerson = people.map(p => {
+      const sub = subtotals[p.id];
+      const proportion = billSubtotal > 0 ? sub / billSubtotal : 0;
+      const personTax = taxAmount * proportion;
+      const personService = serviceAmount * proportion;
+      const personTip = tipOn ? tipAmount / numPeopleForTip : 0;
+      const total = sub + personTax + personService + personTip;
+      grandRaw += total;
+      return {
+        person: p,
+        subtotal: sub,
+        tax: personTax,
+        service: personService,
+        tip: personTip,
+        total,
+        lines: personItemLines[p.id]
+      };
+    });
+
+    const grandTotal = billSubtotal + taxAmount + serviceAmount + tipAmount;
+
+    // reconcile rounding: adjust the largest total by the residual cents
+    if(perPerson.length){
+      const roundedSum = perPerson.reduce((s,pp) => s + Math.round(pp.total*100), 0);
+      const roundedGrand = Math.round(grandTotal*100);
+      const diffCents = roundedGrand - roundedSum;
+      if(diffCents !== 0){
+        const biggest = perPerson.reduce((a,b) => a.total > b.total ? a : b);
+        biggest.total += diffCents/100;
+      }
+    }
+
+    return { perPerson, billSubtotal, taxAmount, serviceAmount, tipAmount, grandTotal, taxOn, serviceOn, tipOn, taxPct, servicePct, tipPct };
+  }
+
+  // ---------- RECEIPT RENDER ----------
+  function renderReceipt(){
+    const body = $('receiptBody');
+    if(people.length === 0 || items.length === 0){
+      body.innerHTML = '<p class="receipt-empty">Add people and items on the left —<br>the breakdown will build itself here.</p>';
+      return;
+    }
+
+    const calc = calculate();
+    let html = '';
+
+    calc.perPerson.forEach(pp => {
+      if(pp.lines.length === 0 && pp.total === 0) return;
+      html += `<div class="receipt-person">`;
+      html += `<div class="rp-name-row"><span>${escapeHtml(pp.person.name)}</span><span>${fmt(pp.subtotal)}</span></div>`;
+      pp.lines.forEach(line => {
+        html += `<div class="rp-line"><span class="rp-item-name">${escapeHtml(line.name)}</span><span>${fmt(line.amount)}</span></div>`;
+      });
+      let extraLine = '';
+      if(calc.taxOn) extraLine += `<div class="rp-line"><span>VAT (${calc.taxPct}%)</span><span>${fmt(pp.tax)}</span></div>`;
+      if(calc.serviceOn) extraLine += `<div class="rp-line"><span>Service (${calc.servicePct}%)</span><span>${fmt(pp.service)}</span></div>`;
+      if(calc.tipOn) extraLine += `<div class="rp-line"><span>Tip (share)</span><span>${fmt(pp.tip)}</span></div>`;
+      html += extraLine;
+      html += `<div class="rp-total-row"><span>Owes</span><span>${fmt(pp.total)}</span></div>`;
+      html += `</div>`;
+    });
+
+    html += `<hr class="receipt-divider">`;
+    html += `<div class="summary-row"><span>Subtotal</span><span>${fmt(calc.billSubtotal)}</span></div>`;
+    if(calc.taxOn) html += `<div class="summary-row muted"><span>VAT (${calc.taxPct}%)</span><span>${fmt(calc.taxAmount)}</span></div>`;
+    if(calc.serviceOn) html += `<div class="summary-row muted"><span>Service (${calc.servicePct}%)</span><span>${fmt(calc.serviceAmount)}</span></div>`;
+    if(calc.tipOn) html += `<div class="summary-row muted"><span>Tip (${calc.tipPct}%)</span><span>${fmt(calc.tipAmount)}</span></div>`;
+
+    html += `<div class="grand-total"><span class="gt-label">Total bill</span><span class="gt-value">${fmt(calc.grandTotal)}</span></div>`;
+
+    body.innerHTML = html;
+  }
+
+  function buildTextSummary(){
+    const calc = calculate();
+    let lines = [];
+    lines.push('THE SPLIT — AED');
+    lines.push('='.repeat(28));
+    calc.perPerson.forEach(pp => {
+      if(pp.lines.length === 0 && pp.total === 0) return;
+      lines.push('');
+      lines.push(pp.person.name + ' — ' + fmt(pp.total));
+      pp.lines.forEach(l => lines.push('  ' + l.name + ': ' + fmt(l.amount)));
+      if(calc.taxOn) lines.push('  VAT: ' + fmt(pp.tax));
+      if(calc.serviceOn) lines.push('  Service: ' + fmt(pp.service));
+      if(calc.tipOn) lines.push('  Tip: ' + fmt(pp.tip));
+    });
+    lines.push('');
+    lines.push('-'.repeat(28));
+    lines.push('Subtotal: ' + fmt(calc.billSubtotal));
+    if(calc.taxOn) lines.push('VAT (' + calc.taxPct + '%): ' + fmt(calc.taxAmount));
+    if(calc.serviceOn) lines.push('Service (' + calc.servicePct + '%): ' + fmt(calc.serviceAmount));
+    if(calc.tipOn) lines.push('Tip (' + calc.tipPct + '%): ' + fmt(calc.tipAmount));
+    lines.push('TOTAL: ' + fmt(calc.grandTotal));
+    return lines.join('\\n');
+  }
+
+  function escapeHtml(str){
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function setReceiptDate(){
+    const d = new Date();
+    $('receiptDate').textContent = d.toLocaleDateString('en-AE', { day:'2-digit', month:'short', year:'numeric' }) + ' · Dubai / Sharjah, UAE';
+  }
+
+  // ---------- EVENTS ----------
+  $('addPersonBtn').onclick = addPerson;
+  $('personInput').addEventListener('keydown', e => { if(e.key === 'Enter') addPerson(); });
+
+  $('addItemBtn').onclick = addItem;
+  $('itemPriceInput').addEventListener('keydown', e => { if(e.key === 'Enter') addItem(); });
+
+  ['taxToggle','taxPct','serviceToggle','servicePct','tipToggle','tipPct'].forEach(id => {
+    $(id).addEventListener('input', () => { renderReceipt(); saveDraft(); });
+    $(id).addEventListener('change', () => { renderReceipt(); saveDraft(); });
+  });
+
+  $('saveBillBtn').onclick = showSaveBillForm;
+  $('saveBillCancelBtn').onclick = hideSaveBillForm;
+  $('saveBillConfirmBtn').onclick = saveNamedBill;
+  $('saveBillNameInput').addEventListener('keydown', e => {
+    if(e.key === 'Enter') saveNamedBill();
+    if(e.key === 'Escape') hideSaveBillForm();
+  });
+
+  function showManualCopyBox(text){
+    const box = $('manualCopyBox');
+    box.value = text;
+    box.style.display = 'block';
+    box.focus();
+    box.select();
+    $('copyHint').style.display = 'block';
+    $('copyHint').textContent = "Couldn't copy automatically — the text is selected below, press Ctrl+C (or Cmd+C on Mac).";
+  }
+
+  function fallbackCopy(text){
+    try{
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      return ok;
+    }catch(e){
+      return false;
+    }
+  }
+
+  function onCopySuccess(){
+    const btn = $('copyBtn');
+    const original = btn.dataset.originalLabel || btn.textContent;
+    btn.dataset.originalLabel = original;
+    btn.textContent = 'Copied ✓';
+    $('copyHint').style.display = 'none';
+    $('manualCopyBox').style.display = 'none';
+    setTimeout(() => { btn.textContent = original; }, 1500);
+  }
+
+  $('copyBtn').onclick = async () => {
+    const text = buildTextSummary();
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      try{
+        await navigator.clipboard.writeText(text);
+        onCopySuccess();
+        return;
+      }catch(e){
+        // fall through to the manual fallback below
+      }
+    }
+    const ok = fallbackCopy(text);
+    if(ok){ onCopySuccess(); }
+    else { showManualCopyBox(text); }
+  };
+
+  $('resetBtn').onclick = () => armConfirm($('resetBtn'), 'Click again to confirm', async () => {
+    people = [];
+    items = [];
+    nextPersonId = 1;
+    nextItemId = 1;
+    renderPeople();
+    renderItems();
+    renderReceipt();
+    $('manualCopyBox').style.display = 'none';
+    $('copyHint').style.display = 'none';
+    try{
+      await window.storage.delete(KEY_DRAFT, false);
+    }catch(e){ /* nothing to clear, that's fine */ }
+    flashStatus('Everything cleared');
+  });
+
+  // ---------- INIT ----------
+  async function init(){
+    setReceiptDate();
+    await loadDraft();          // restore whatever bill was in progress
+    renderPeople();
+    renderItems();
+    renderReceipt();
+    await renderSavedBillsFromStorage(); // populate the saved-bills list
+  }
+  init();
+})();
+</script>
+</body>
+</html>

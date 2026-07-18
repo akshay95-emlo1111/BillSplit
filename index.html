@@ -5,21 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Split — Bill Splitter (AED)</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
   :root{
-    --bg: #EFEBE1;
-    --paper: #FBF9F4;
-    --ink: #23241F;
-    --ink-soft: #6B6A61;
-    --gold: #A9791F;
-    --gold-deep: #7C5A16;
-    --teal: #1F5F5B;
-    --teal-deep: #163F3C;
-    --danger: #A44A3F;
-    --line: #DAD4C3;
-    --line-strong: #C6BEA7;
-    --radius: 3px;
+    --bg: #F7F7F5;
+    --paper: #FFFFFF;
+    --ink: #16181D;
+    --ink-soft: #70747C;
+    --gold: #0B6B53;
+    --gold-deep: #0B6B53;
+    --teal: #16181D;
+    --teal-deep: #000000;
+    --danger: #B23B2E;
+    --line: #E7E5E1;
+    --line-strong: #D8D5CE;
+    --accent-soft: #E4F1EC;
+    --radius: 10px;
   }
 
   *{box-sizing:border-box;}
@@ -27,7 +28,7 @@
   body{
     background: var(--bg);
     color: var(--ink);
-    font-family:'IBM Plex Sans', sans-serif;
+    font-family:'Inter', sans-serif;
     min-height:100vh;
     -webkit-font-smoothing:antialiased;
   }
@@ -35,7 +36,7 @@
   .wrap{
     max-width:1180px;
     margin:0 auto;
-    padding:36px 24px 80px;
+    padding:48px 24px 80px;
   }
 
   /* ---------- Header ---------- */
@@ -44,44 +45,52 @@
     align-items:flex-end;
     justify-content:space-between;
     gap:24px;
-    margin-bottom:34px;
-    border-bottom: 1px solid var(--line-strong);
-    padding-bottom:18px;
+    margin-bottom:40px;
     flex-wrap:wrap;
   }
   .brand-eyebrow{
-    font-family:'IBM Plex Mono', monospace;
+    font-family:'JetBrains Mono', monospace;
     font-size:11px;
-    letter-spacing:0.14em;
+    letter-spacing:0.12em;
     text-transform:uppercase;
     color:var(--gold-deep);
-    margin:0 0 6px;
+    margin:0 0 10px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .brand-eyebrow::before{
+    content:'';
+    width:6px;height:6px;
+    border-radius:50%;
+    background:var(--gold-deep);
+    display:inline-block;
   }
   h1{
-    font-family:'Fraunces', serif;
+    font-family:'Space Grotesk', sans-serif;
     font-weight:600;
-    font-size:clamp(30px,4vw,44px);
+    font-size:clamp(30px,4vw,42px);
     margin:0;
-    letter-spacing:-0.01em;
-    line-height:1;
+    letter-spacing:-0.02em;
+    line-height:1.05;
   }
   h1 em{
-    font-style:italic;
-    color:var(--teal);
+    font-style:normal;
+    color:var(--gold-deep);
   }
   .header-meta{
-    font-family:'IBM Plex Mono', monospace;
+    font-family:'JetBrains Mono', monospace;
     font-size:12px;
     color:var(--ink-soft);
     text-align:right;
-    line-height:1.6;
+    line-height:1.7;
   }
 
   /* ---------- Layout ---------- */
   .layout{
     display:grid;
     grid-template-columns: 1.35fr 1fr;
-    gap:28px;
+    gap:20px;
     align-items:start;
   }
   @media (max-width: 880px){
@@ -92,8 +101,8 @@
     background: var(--paper);
     border:1px solid var(--line);
     border-radius: var(--radius);
-    padding:24px;
-    margin-bottom:22px;
+    padding:26px 28px;
+    margin-bottom:18px;
   }
   .panel-title{
     display:flex;
@@ -102,27 +111,30 @@
     margin:0 0 4px;
   }
   .panel-num{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12px;
-    color:var(--gold-deep);
-    border:1px solid var(--gold-deep);
-    border-radius:50%;
-    width:20px;height:20px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    font-weight:500;
+    color:var(--ink-soft);
+    border:none;
+    border-radius:0;
+    width:auto;height:auto;
     display:inline-flex;
     align-items:center;
     justify-content:center;
     flex-shrink:0;
   }
   .panel-title h2{
-    font-family:'Fraunces', serif;
+    font-family:'Space Grotesk', sans-serif;
     font-weight:600;
-    font-size:20px;
+    font-size:18px;
     margin:0;
+    letter-spacing:-0.01em;
   }
   .panel-sub{
     font-size:13px;
     color:var(--ink-soft);
-    margin:2px 0 18px 30px;
+    margin:2px 0 20px 0;
+    line-height:1.5;
   }
 
   /* ---------- People ---------- */
@@ -132,50 +144,51 @@
     margin-bottom:16px;
   }
   input[type=text], input[type=number]{
-    font-family:'IBM Plex Sans', sans-serif;
+    font-family:'Inter', sans-serif;
     font-size:14px;
-    padding:10px 12px;
+    padding:11px 14px;
     border:1px solid var(--line-strong);
-    border-radius: var(--radius);
+    border-radius: 8px;
     background:#fff;
     color:var(--ink);
     width:100%;
   }
   input[type=text]:focus, input[type=number]:focus{
-    outline:2px solid var(--teal);
-    outline-offset:1px;
-    border-color:var(--teal);
+    outline:none;
+    border-color:var(--gold-deep);
+    box-shadow: 0 0 0 3px var(--accent-soft);
   }
   .btn{
-    font-family:'IBM Plex Sans', sans-serif;
+    font-family:'Inter', sans-serif;
     font-size:13px;
     font-weight:600;
     letter-spacing:0.01em;
-    padding:10px 18px;
-    border-radius: var(--radius);
+    padding:11px 20px;
+    border-radius: 8px;
     border:1px solid var(--teal-deep);
     background:var(--teal);
     color:#fff;
     cursor:pointer;
     white-space:nowrap;
-    transition:transform .08s ease, background .15s ease;
+    transition:transform .08s ease, background .15s ease, opacity .15s ease;
   }
-  .btn:hover{ background:var(--teal-deep); }
+  .btn:hover{ opacity:.85; }
   .btn:active{ transform:translateY(1px); }
-  .btn:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+  .btn:focus-visible{ outline:2px solid var(--gold-deep); outline-offset:2px; }
   .btn.ghost{
     background:transparent;
-    color:var(--teal-deep);
+    color:var(--ink);
     border:1px solid var(--line-strong);
   }
-  .btn.ghost:hover{ background:#fff; border-color:var(--teal); }
-  .btn.small{ padding:6px 12px; font-size:12px; }
-  .btn.danger{ background:transparent; color:var(--danger); border:1px solid var(--danger); }
-  .btn.danger:hover{ background:var(--danger); color:#fff; }
+  .btn.ghost:hover{ background:var(--bg); opacity:1; border-color:var(--ink-soft); }
+  .btn.small{ padding:7px 14px; font-size:12px; }
+  .btn.danger{ background:transparent; color:var(--danger); border:1px solid var(--line-strong); }
+  .btn.danger:hover{ background:var(--danger); color:#fff; border-color:var(--danger); opacity:1; }
   .btn.confirming{
     background:var(--danger);
     color:#fff;
     border-color:var(--danger);
+    opacity:1;
   }
 
   .people-chips{
@@ -190,17 +203,17 @@
     background:#fff;
     border:1px solid var(--line-strong);
     border-radius:20px;
-    padding:6px 6px 6px 14px;
+    padding:7px 7px 7px 14px;
     font-size:13px;
     font-weight:500;
   }
   .chip .dot{
-    width:8px;height:8px;border-radius:50%;
+    width:7px;height:7px;border-radius:50%;
     flex-shrink:0;
   }
   .chip button{
     border:none;
-    background:var(--line);
+    background:var(--bg);
     color:var(--ink-soft);
     width:20px;height:20px;
     border-radius:50%;
@@ -213,7 +226,7 @@
   .empty-note{
     font-size:13px;
     color:var(--ink-soft);
-    font-style:italic;
+    font-style:normal;
     padding:8px 0;
   }
 
@@ -229,30 +242,31 @@
   }
   .item-card{
     border:1px solid var(--line);
-    border-radius: var(--radius);
-    padding:14px 16px;
-    margin-bottom:12px;
+    border-radius: 8px;
+    padding:16px 18px;
+    margin-bottom:10px;
     background:#fff;
   }
   .item-card.unassigned{
     border-color: var(--danger);
-    background: #FBF1EF;
+    background: #FCF3F1;
   }
   .item-top{
     display:flex;
     justify-content:space-between;
     align-items:center;
     gap:12px;
-    margin-bottom:10px;
+    margin-bottom:12px;
   }
   .item-name{
     font-weight:600;
-    font-size:15px;
+    font-size:14.5px;
   }
   .item-price{
-    font-family:'IBM Plex Mono', monospace;
+    font-family:'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
     font-weight:500;
-    color:var(--gold-deep);
+    color:var(--ink);
     font-size:14px;
     white-space:nowrap;
   }
@@ -260,11 +274,11 @@
     display:flex;
     flex-wrap:wrap;
     gap:6px;
-    margin-bottom:8px;
+    margin-bottom:10px;
   }
   .toggle-person{
     font-size:12px;
-    padding:5px 10px;
+    padding:6px 12px;
     border-radius:16px;
     border:1px solid var(--line-strong);
     background:#fff;
@@ -273,8 +287,8 @@
     transition: all .1s ease;
   }
   .toggle-person.on{
-    background:var(--teal);
-    border-color:var(--teal-deep);
+    background:var(--ink);
+    border-color:var(--ink);
     color:#fff;
   }
   .item-foot{
@@ -290,25 +304,27 @@
   }
   .split-all-row{
     display:flex;
-    gap:8px;
-    margin-bottom:8px;
+    gap:10px;
+    margin-bottom:10px;
   }
   .link-btn{
     background:none;
     border:none;
-    color:var(--teal-deep);
+    color:var(--ink-soft);
     font-size:12px;
-    text-decoration:underline;
+    text-decoration:none;
     cursor:pointer;
     padding:0;
+    border-bottom:1px solid var(--line-strong);
   }
+  .link-btn:hover{ color:var(--ink); border-color:var(--ink); }
 
   /* ---------- Tax / Service ---------- */
   .toggle-row{
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:14px 0;
+    padding:16px 0;
     border-bottom:1px solid var(--line);
   }
   .toggle-row:last-child{ border-bottom:none; }
@@ -317,7 +333,7 @@
     flex-direction:column;
     gap:2px;
   }
-  .toggle-label strong{ font-size:14px; }
+  .toggle-label strong{ font-size:14px; font-weight:600; }
   .toggle-label span{ font-size:12px; color:var(--ink-soft); }
   .switch-and-input{
     display:flex;
@@ -325,13 +341,14 @@
     gap:12px;
   }
   .pct-input{
-    width:72px;
+    width:64px;
     text-align:right;
-    font-family:'IBM Plex Mono', monospace;
+    font-family:'JetBrains Mono', monospace;
+    padding:8px 10px !important;
   }
   .switch{
     position:relative;
-    width:42px;height:24px;
+    width:38px;height:22px;
     flex-shrink:0;
   }
   .switch input{ opacity:0; width:0; height:0; position:absolute; }
@@ -345,15 +362,15 @@
   .slider::before{
     content:'';
     position:absolute;
-    width:18px;height:18px;
+    width:16px;height:16px;
     left:3px; top:3px;
     background:#fff;
     border-radius:50%;
     transition:.15s;
-    box-shadow:0 1px 2px rgba(0,0,0,.3);
+    box-shadow:0 1px 2px rgba(0,0,0,.2);
   }
-  .switch input:checked + .slider{ background:var(--teal); }
-  .switch input:checked + .slider::before{ transform:translateX(18px); }
+  .switch input:checked + .slider{ background:var(--gold-deep); }
+  .switch input:checked + .slider::before{ transform:translateX(16px); }
 
   /* ---------- Receipt (signature element) ---------- */
   .receipt-sticky{
@@ -363,59 +380,57 @@
   .receipt{
     background:var(--paper);
     border:1px solid var(--line);
-    border-radius: var(--radius) var(--radius) 0 0;
-    padding:26px 26px 20px;
-    font-family:'IBM Plex Mono', monospace;
-    box-shadow: 0 18px 34px -20px rgba(35,36,31,0.35);
+    border-radius: var(--radius);
+    padding:28px;
+    font-family:'JetBrains Mono', monospace;
+    box-shadow: 0 1px 2px rgba(22,24,29,0.04);
   }
   .receipt-zigzag{
-    height:16px;
-    background:
-      linear-gradient(-45deg, var(--bg) 8px, transparent 0),
-      linear-gradient(45deg, var(--bg) 8px, transparent 0);
-    background-size:16px 16px;
-    background-position: left bottom;
-    background-repeat: repeat-x;
-    margin-bottom:24px;
+    height:0;
+    background:none;
+    margin-bottom:0;
   }
   .receipt-head{
-    text-align:center;
-    margin-bottom:6px;
+    text-align:left;
+    margin-bottom:4px;
   }
   .receipt-head .r-title{
-    font-family:'Fraunces', serif;
-    font-size:20px;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:17px;
     font-weight:600;
-    letter-spacing:0.02em;
+    letter-spacing:-0.01em;
   }
   .receipt-head .r-sub{
     font-size:11px;
     color:var(--ink-soft);
-    letter-spacing:0.08em;
+    letter-spacing:0.04em;
     text-transform:uppercase;
-    margin-top:2px;
+    margin-top:3px;
+    font-family:'JetBrains Mono', monospace;
   }
   .receipt-divider{
     border:none;
-    border-top:1px dashed var(--line-strong);
-    margin:16px 0;
+    border-top:1px solid var(--line);
+    margin:18px 0;
   }
   .receipt-person{
-    margin-bottom:14px;
+    margin-bottom:16px;
   }
   .rp-name-row{
     display:flex;
     justify-content:space-between;
     font-size:13.5px;
     font-weight:600;
-    margin-bottom:5px;
+    font-family:'Inter', sans-serif;
+    margin-bottom:6px;
   }
   .rp-line{
     display:flex;
     justify-content:space-between;
     font-size:12px;
     color:var(--ink-soft);
-    padding:1px 0;
+    padding:2px 0;
+    font-variant-numeric: tabular-nums;
   }
   .rp-line .rp-item-name{
     max-width:65%;
@@ -428,60 +443,92 @@
     justify-content:space-between;
     font-size:13px;
     font-weight:600;
-    margin-top:6px;
-    padding-top:6px;
+    margin-top:8px;
+    padding-top:8px;
     border-top:1px solid var(--line);
-    color:var(--teal-deep);
+    color:var(--ink);
+    font-variant-numeric: tabular-nums;
   }
   .summary-row{
     display:flex;
     justify-content:space-between;
     font-size:13px;
-    margin-bottom:6px;
+    margin-bottom:7px;
+    font-variant-numeric: tabular-nums;
   }
   .summary-row.muted{ color:var(--ink-soft); }
   .grand-total{
     display:flex;
     justify-content:space-between;
     align-items:baseline;
-    margin-top:14px;
-    padding-top:14px;
-    border-top:2px solid var(--ink);
+    margin-top:16px;
+    padding-top:16px;
+    border-top:1px solid var(--ink);
   }
   .grand-total .gt-label{
-    font-family:'Fraunces', serif;
-    font-size:15px;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:14px;
     font-weight:600;
   }
   .grand-total .gt-value{
-    font-size:22px;
+    font-size:24px;
     font-weight:600;
     color:var(--gold-deep);
+    font-variant-numeric: tabular-nums;
+  }
+  .split-bar{
+    display:flex;
+    height:5px;
+    border-radius:3px;
+    overflow:hidden;
+    margin-top:16px;
+    background:var(--line);
+  }
+  .split-seg{ height:100%; }
+  .seg-base{ background:var(--gold-deep); }
+  .seg-tax{ background:var(--gold-deep); opacity:.55; }
+  .seg-service{ background:var(--gold-deep); opacity:.35; }
+  .seg-tip{ background:var(--gold-deep); opacity:.2; }
+  .split-legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-top:10px;
+    font-size:10.5px;
+    color:var(--ink-soft);
+    font-family:'Inter', sans-serif;
+  }
+  .split-legend .dot{
+    width:6px;height:6px;
+    border-radius:50%;
+    display:inline-block;
+    margin-right:4px;
   }
   .receipt-empty{
-    text-align:center;
+    text-align:left;
     color:var(--ink-soft);
     font-size:12.5px;
-    padding:20px 0;
+    padding:8px 0 4px;
     line-height:1.7;
+    font-family:'Inter', sans-serif;
   }
   .receipt-actions{
     display:flex;
     gap:10px;
-    margin-top:20px;
+    margin-top:22px;
   }
-  .receipt-actions .btn{ flex:1; text-align:center; font-family:'IBM Plex Sans', sans-serif;}
+  .receipt-actions .btn{ flex:1; text-align:center; font-family:'Inter', sans-serif;}
   .aed{ font-size:11px; opacity:.7; margin-right:2px;}
   .manual-copy-box{
     width:100%;
     margin-top:12px;
-    font-family:'IBM Plex Mono', monospace;
+    font-family:'JetBrains Mono', monospace;
     font-size:11.5px;
     line-height:1.5;
     padding:12px;
     border:1px solid var(--line-strong);
-    border-radius: var(--radius);
-    background:#fff;
+    border-radius: 8px;
+    background:var(--bg);
     color:var(--ink);
     resize:vertical;
   }
@@ -492,7 +539,7 @@
     align-items:center;
     justify-content:space-between;
     gap:12px;
-    padding:10px 0;
+    padding:12px 0;
     border-bottom:1px solid var(--line);
   }
   .saved-bill-row:last-child{ border-bottom:none; }
@@ -504,6 +551,7 @@
   }
   .sb-info strong{
     font-size:13.5px;
+    font-weight:600;
     overflow:hidden;
     text-overflow:ellipsis;
     white-space:nowrap;
@@ -511,7 +559,7 @@
   .sb-info span{
     font-size:11.5px;
     color:var(--ink-soft);
-    font-family:'IBM Plex Mono', monospace;
+    font-family:'JetBrains Mono', monospace;
   }
   .sb-actions{
     display:flex;
@@ -530,7 +578,7 @@
   }
   .save-bill-form input{ flex:1; }
   .save-status{
-    font-family:'IBM Plex Mono', monospace;
+    font-family:'JetBrains Mono', monospace;
     font-size:11px;
     color:var(--ink-soft);
     display:flex;
@@ -541,7 +589,7 @@
   }
   .save-status .dot-live{
     width:6px;height:6px;border-radius:50%;
-    background:var(--teal);
+    background:var(--gold-deep);
     flex-shrink:0;
   }
 
@@ -549,10 +597,10 @@
     text-align:center;
     font-size:12px;
     color:var(--ink-soft);
-    margin-top:30px;
+    margin-top:36px;
   }
 
-  ::selection{ background: var(--gold); color:#fff; }
+  ::selection{ background: var(--accent-soft); color:var(--ink); }
 </style>
 </head>
 <body>
@@ -1236,6 +1284,26 @@
     if(calc.tipOn) html += `<div class="summary-row muted"><span>Tip (${calc.tipPct}%)</span><span>${fmt(calc.tipAmount)}</span></div>`;
 
     html += `<div class="grand-total"><span class="gt-label">Total bill</span><span class="gt-value">${fmt(calc.grandTotal)}</span></div>`;
+
+    if(calc.grandTotal > 0){
+      const segments = [{ label:'Items', value: calc.billSubtotal, cls:'seg-base' }];
+      if(calc.taxOn) segments.push({ label:'VAT', value: calc.taxAmount, cls:'seg-tax' });
+      if(calc.serviceOn) segments.push({ label:'Service', value: calc.serviceAmount, cls:'seg-service' });
+      if(calc.tipOn) segments.push({ label:'Tip', value: calc.tipAmount, cls:'seg-tip' });
+
+      html += '<div class="split-bar">';
+      segments.forEach(seg => {
+        const pct = (seg.value / calc.grandTotal * 100).toFixed(3);
+        html += `<div class="split-seg ${seg.cls}" style="width:${pct}%" title="${escapeHtml(seg.label)}: ${fmt(seg.value)}"></div>`;
+      });
+      html += '</div>';
+
+      html += '<div class="split-legend">';
+      segments.forEach(seg => {
+        html += `<span><i class="dot ${seg.cls}"></i>${escapeHtml(seg.label)}</span>`;
+      });
+      html += '</div>';
+    }
 
     body.innerHTML = html;
   }
